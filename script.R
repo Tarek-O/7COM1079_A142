@@ -12,7 +12,7 @@ hist(df2$Salary, main = "Histogram of Salary Distribution", xlab = "Salaries")
 
 #Visualized the data using a boxplot function with Salary as x-axis and Performance Score as y-axis
 boxplot(df2$Salary ~ df2$PerformanceScore, xlab =
-          "Perforamnce Score", ylab = "Salary", main = "Salary on Performance Score")
+          "Perforamnce Score", ylab = "Salary", main = "Salary Based on Performance Score")
 
 #Calculating the mean of all salaries
 mean(df2$Salary)
