@@ -16,7 +16,7 @@ EMPLOYEE_COLUMNS <- c("EmpID", "Employee_Name", "PerformanceScore", "Salary")
 df3 <- df2[EMPLOYEE_COLUMNS]
 
 #Visualize the frequency of Salaries based on the cleaned data which looks normal
-hist(df2$Salary, main = "Histogram of Salary Distribution", xlab = "Salaries")
+hist(df2$Salary, format(df2$Salary, scientific = F), main = "Histogram of Salary Distribution", xlab = "Salaries")
 
 #Visualized the data using a boxplot function with Salary as x-axis and Performance Score as y-axis
 boxplot(df2$Salary ~ df2$PerformanceScore, xlab =
