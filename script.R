@@ -6,22 +6,25 @@ library(readr)
 library(dplyr)
 
 #Allocating variable "df" as a reference to the dataset DS301 
-df<-read.csv("HRDataset_v14.csv")
+raw_data<-read.csv("HRDataset_v14.csv")
 
 #Created a subset of the original dataset to clean the data
-df2<-subset(df,State == "MA")
+### Is there a purpose to this? Just for clarity are we only doing our research in the state of massachusetts? ###
+massachusetts_employee_data<-subset(raw_data, State == "MA")
 
 # Extract the variables used for analysis (Performance Score, Salary) along with the Details of the Employee
-EMPLOYEE_COLUMNS <- c("EmpID", "Employee_Name", "PerformanceScore", "Salary")
-df3 <- df2[EMPLOYEE_COLUMNS]
+EMPLOYEE_COLUMNS <- c("EmpID", "Employee_Name")
+FEATURE_COLUMNS <- c("PerformanceScore", "Salary")
+FINAL_COLUMNS <- c(EMPLOYEE_COLUMNS, FEATURE_COLUMNS)
+massachusetts_employee_data_projection <- massachusetts_employee_data[FINAL_COLUMNS]
 
-#Visualize the frequency of Salaries based on the cleaned data which looks normal
-### THERE IS AN ERROR IN HISTOGRAM FUNCTION###
-hist(df2$Salary, format(df2$Salary, scientific = F), main = "Histogram of Salary Distribution", xlab = "Salaries")
+# Visualize the frequency of Salaries based on the cleaned data which looks normal
+hist(massachusetts_employee_data_projection$Salary, main = "Histogram of Salary Distribution", xlab = "Salaries", xaxt = "n")
+axis(1, at = pretty(massachusetts_employee_data_projection$Salary), labels = format(pretty(massachusetts_employee_data_projection$Salary), scientific = FALSE))
 
 #Visualized the data using a boxplot function with Salary as x-axis and Performance Score as y-axis
-boxplot(df2$Salary ~ df2$PerformanceScore, xlab =
-          "Perforamnce Score", ylab = "Salary", main = "Salary Based on Performance Score")
+boxplot(massachusetts_employee_data_projection$Salary ~ massachusetts_employee_data_projection$PerformanceScore, xlab =
+          "Perforamnce Score", ylab = "Salary", main = "Salary Based on Performance Score", las = 1)
 
 #Calculating the mean of all salaries
-mean(df2$Salary)
+mean(massachusetts_employee_data_projection$Salary)
