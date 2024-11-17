@@ -5,18 +5,29 @@
 library(readr)
 library(dplyr)
 
-#Allocating variable "df" as a reference to the dataset DS301 
+#Allocating variable "df" as a reference to the dataset DS301
 raw_data<-read.csv("HRDataset_v14.csv")
 
 # Constants
 EMPLOYEE_COLUMNS <- c("EmpID", "Employee_Name")
-FEATURE_COLUMNS <- c("PerformanceScore", "Salary")
+FEATURE_COLUMNS <- c("MaritalDesc", "Salary")
 FINAL_COLUMNS <- c(EMPLOYEE_COLUMNS, FEATURE_COLUMNS)
-DEPENDENT_VARIABLE <- "PerformanceScore"
+DEPENDENT_VARIABLE <- "MaritalDesc"
 INDEPENDENT_VARIABLE <- "Salary"
 
 #Created a subset of the original dataset to clean the data
-massachusetts_employee_data<-subset(raw_data, State == "MA")
+massachusetts_employee_data<-subset(raw_data, MaritalDesc %in% c("Married", "Single"))
+
+# group count of employees by position ordered by count
+grouped_data <- massachusetts_employee_data %>%
+  group_by(MaritalDesc) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+# Mean salary of employees by Marital Status
+mean_salary_by_marital_status <- massachusetts_employee_data %>%
+  group_by(MaritalDesc) %>%
+  summarise(mean_salary = mean(Salary))
 
 # Extract the variables used for analysis (Performance Score, Salary) along with the Details of the Employee
 massachusetts_employee_data_projection <- massachusetts_employee_data[FINAL_COLUMNS]
@@ -30,6 +41,9 @@ hist(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]],
 # Format the x-axis
 axis(1, at = pretty(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]]),
      labels = format(pretty(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]]), scientific = FALSE))
+# Format the y-axis
+axis(2, at = pretty(density(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]])$y),
+     labels = format(pretty(density(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]])$y), scientific = FALSE))
 # Add a bell curve
 curve(dnorm(x, mean = mean(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]]),
             sd = sd(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]])),
