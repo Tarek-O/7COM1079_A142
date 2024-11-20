@@ -4,6 +4,7 @@
 # Load the core libraries
 library(readr)
 library(dplyr)
+library(ggplot2)
 
 #Allocating variable "df" as a reference to the dataset DS301 
 raw_data<-read.csv("HRDataset_v14.csv")
@@ -48,6 +49,14 @@ boxplot(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]] ~ massach
         las = 1,
         col = c("lightgreen", "lightblue", "orange", "red"))
 abline(h = mean(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]]), col = "red", lwd = 2)
+
+#Using ggplot for flexiblity and better aesthetics
+ #ggplot(massachusetts_employee_data_projection, aes(x = PerformanceScore, y = Salary)) +
+#  geom_boxplot(fill = "lightblue") +
+ # geom_hline(yintercept = mean_salary, color = "red", linetype = "dashed") +
+#  labs(title = "Salary Based on Performance Score", x = "Performance Score", y = "Salary") +
+ # theme_minimal()
+
 #Calculating the mean of all salaries
 mean_salary <- mean(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]])
 
