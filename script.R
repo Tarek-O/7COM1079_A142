@@ -19,6 +19,11 @@ INDEPENDENT_VARIABLE <- "Salary"
 #Created a subset of the original dataset to clean the data
 massachusetts_employee_data<-subset(raw_data, State == "MA")
 
+#Filter for US Citizens who are Single or Married
+massachusetts_employee_data <- massachusetts_employee_data %>%
+  filter(CitizenDesc == "US Citizen" & (MaritalDesc == "Single" | MaritalDesc == "Married"))
+
+
 # Extract the variables used for analysis (Performance Score, Salary) along with the Details of the Employee
 massachusetts_employee_data_projection <- massachusetts_employee_data[FINAL_COLUMNS]
 
