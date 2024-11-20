@@ -29,15 +29,18 @@ mean_salary_by_marital_status <- massachusetts_employee_data %>%
   group_by(MaritalDesc) %>%
   summarise(mean_salary = mean(Salary))
 
-# Extract the variables used for analysis (Performance Score, Salary) along with the Details of the Employee
+# Extract the variables used for analysis (MartialDesc, Salary) along with the Details of the Employee
 massachusetts_employee_data_projection <- massachusetts_employee_data[FINAL_COLUMNS]
 
-# Visualize the frequency of Salaries based on the cleaned data which looks normal
+# Visualize the frequency of Salaries based on the cleaned data which looks normal 
+
+##### Histogram does not show normal distribution + should fix the visualization of the histogram axis
 hist(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]],
      main = "Histogram of Salary Distribution",
      xlab = "Salaries",
      xaxt = "n",
      prob = TRUE)
+
 # Format the x-axis
 axis(1, at = pretty(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]]),
      labels = format(pretty(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]]), scientific = FALSE))
@@ -49,16 +52,19 @@ curve(dnorm(x, mean = mean(massachusetts_employee_data_projection[[INDEPENDENT_V
             sd = sd(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]])),
       add = TRUE, col = "blue", lwd = 2)
 
-# wilcox.test(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]] ~ massachusetts_employee_data_projection[[DEPENDENT_VARIABLE]])
+#P Value shows 0.7278
+wilcox.test(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]] ~ massachusetts_employee_data_projection[[DEPENDENT_VARIABLE]])
 
-#Visualized the data using a boxplot function with Salary as x-axis and Performance Score as y-axis
+#Visualized the data using a boxplot function with Salary as x-axis and Marital Status as y-axis
 boxplot(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]] ~ massachusetts_employee_data_projection[[DEPENDENT_VARIABLE]],
-        xlab = "Perforamnce Score",
+        xlab = "Marital Status",
         ylab = "Salary",
-        main = "Salary Based on Performance Score",
+        main = "Salary Based on Marital Status",
         las = 1,
-        col = c("lightgreen", "lightblue", "orange", "red"))
+        col = c("lightgreen", "lightblue"))
+
 abline(h = mean(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]]), col = "red", lwd = 2)
+
 #Calculating the mean of all salaries
 mean_salary <- mean(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]])
 
