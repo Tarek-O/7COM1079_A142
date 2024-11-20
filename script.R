@@ -21,6 +21,9 @@ massachusetts_employee_data<-subset(raw_data, State == "MA")
 # Extract the variables used for analysis (Performance Score, Salary) along with the Details of the Employee
 massachusetts_employee_data_projection <- massachusetts_employee_data[FINAL_COLUMNS]
 
+#Check for missing values 
+summary(massachusetts_employee_data_projection)
+
 # Visualize the frequency of Salaries based on the cleaned data which looks normal
 hist(massachusetts_employee_data_projection[[INDEPENDENT_VARIABLE]],
      main = "Histogram of Salary Distribution",
