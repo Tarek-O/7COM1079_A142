@@ -50,7 +50,7 @@ mean_salary_by_marital_status <- employee_data %>%
 
 # Visualize the frequency of Salaries based on the cleaned dataset
 hist(employee_data[[INDEPENDENT_VARIABLE]],
-     main = "Histogram of Salary Distribution ($)",
+     main = "Histogram of Annual Salary Distribution ($)",
      xlab = "Salaries ($)",
      xaxt = "n",
      ylim = c(0, 70),
