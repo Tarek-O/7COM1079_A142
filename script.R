@@ -18,15 +18,16 @@ INDEPENDENT_VARIABLE <- "Salary"
 
 employee_data_projection <- raw_data[FINAL_COLUMNS]
 
-# Parse all the string data in the dataset so that there are no leading or trailing whitespaces and
+# Parse all the string data in the dataset so that there are no leading or trailing whitespaces and convert to lowercase
 for (i in seq_len(ncol(employee_data_projection))) {
-  if (is.character(employee_data_projection[[i]])) {
-    employee_data_projection[[i]] <- trimws(employee_data_projection[[i]], which = "both")
-  }
+  if (!is.character(employee_data_projection[[i]])) next
+
+  employee_data_projection[[i]] <- trimws(employee_data_projection[[i]], which = "both")
+  employee_data_projection[[i]] <- tolower(employee_data_projection[[i]])
 }
 
 
-subset_bool <- employee_data_projection$Department == "Production" & employee_data_projection$MaritalDesc %in% c("Married", "Single")
+subset_bool <- employee_data_projection$Department == "production" & employee_data_projection$MaritalDesc %in% c("married", "single")
 
 #Created a subset of the original dataset to clean the data
 employee_data<-subset(employee_data_projection, subset_bool)
@@ -43,14 +44,12 @@ mean_salary_by_marital_status <- employee_data %>%
   group_by(MaritalDesc) %>%
   summarise(mean_salary = mean(Salary))
 
-# Extract the variables used for analysis (MartialDesc, Salary) along with the Details of the Employee
-
-# Visualize the frequency of Salaries based on the cleaned data which looks normal
+# Visualize the frequency of Salaries based on the cleaned dataset
 hist(employee_data[[INDEPENDENT_VARIABLE]],
      main = "Histogram of Salary Distribution ($)",
      xlab = "Salaries ($)",
      xaxt = "n",
-     ylim = c(0, 50),
+     ylim = c(0, 70),
      las = 1,
      freq = TRUE,
      scientific = FALSE
@@ -67,50 +66,25 @@ curve(dnorm(x, mean = mean(employee_data[[INDEPENDENT_VARIABLE]]),
 dev.copy(png, "salary_histogram.png")
 dev.off()
 
+# Test for normality
 shapiro.test(employee_data[[INDEPENDENT_VARIABLE]])
 
+# Test for equality of variance
 wilcox.test(employee_data[[INDEPENDENT_VARIABLE]] ~ employee_data[[DEPENDENT_VARIABLE]])
 
-# Visualized the data using a boxplot function with Salary as x-axis and Marital Status as y-axis
-boxplot <- boxplot(employee_data[[INDEPENDENT_VARIABLE]] ~ employee_data[[DEPENDENT_VARIABLE]],
-        xlab = "Marital Status",
-        ylab = "Salary ($)",
-        main = "Salary Based on Marital Status",
-        ylim = c(0, 180000),
-        las = 1,
-        col = c("lightgreen", "lightblue"))
-
-abline(h = mean(employee_data[[INDEPENDENT_VARIABLE]]), col = "red", lwd = 2)
-
-
+# Get the mean salary of the employees
 mean_salary <- mean(employee_data[[INDEPENDENT_VARIABLE]])
+mean_salary_stats_label <- paste("Mean Annual Salary ($): ", round(mean_salary, 2))
 
+# Visualized the data using boxplot from the ggplot2 library
+boxplot <- ggplot(employee_data, aes(x = MaritalDesc, y = Salary)) +
+  geom_boxplot(aes(fill = MaritalDesc), color = "black") +
+  geom_hline(aes(yintercept = mean_salary, color = mean_salary_stats_label), linetype = "dashed") +
+  labs(title = "Salary Based on Marital Description", x = "Marital Description", y = "Annual Salary ($)") +
+  scale_fill_discrete(name = "Marital Description") +
+  scale_color_manual(name = "Statistics", values = setNames("red", mean_salary_stats_label)) +
+  theme(legend.title = element_text(face = "bold"), plot.title = element_text(hjust = 0.5))
+boxplot
 
-# ggplot(employee_data, aes(x = MaritalDesc, y = Salary)) +
-#   geom_boxplot(fill = "lightblue") +
-#   geom_hline(yintercept = mean_salary, color = "red", linetype = "dashed") +
-#   labs(title = "Salary Based on Marital Description", x = "Marital Description", y = "Salary ($)") +
-#   scale_fill_discrete(name = "Groups") +
-#   scale_color_manual(name = "Statistics",      # Add mean to a separate legend
-#                      values = c("Overall Mean" = "red")) +
-#   theme(legend.title = element_text(face = "bold"))
-
-
-# ggplot(data, aes(x = group, y = value)) +
-#   geom_boxplot(aes(fill = group), alpha = 0.6) +  # Boxplot with group fill
-#   geom_hline(aes(yintercept = overall_mean, color = "Overall Mean"),
-#              linetype = "dashed", size = 1) +  # Add the mean line
-#   scale_fill_discrete(name = "Groups") +       # Rename fill legend
-#   scale_color_manual(name = "Statistics",      # Add mean to a separate legend
-#                      values = c("Overall Mean" = "red")) +
-#   labs(title = "Boxplot with Overall Me")
-
-
-#Calculating the mean of all salaries
-
-# Add a legend to the boxplot to show the mean salary
-legend("topright", legend = paste("Mean Salary: ", round(mean_salary, 2)), fill = "red")
-
-# export to png
-dev.copy(png, "salary_boxplot.png")
-dev.off()
+# Save the boxplot to a png file
+ggsave("salary_boxplot.png", plot = boxplot)
