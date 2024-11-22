@@ -46,7 +46,7 @@ mean_salary_by_marital_status <- employee_data %>%
   group_by(MaritalDesc) %>%
   summarise(mean_salary = mean(Salary))
 
-
+#adsgg
 
 # Visualize the frequency of Salaries based on the cleaned dataset
 hist(employee_data[[INDEPENDENT_VARIABLE]],
