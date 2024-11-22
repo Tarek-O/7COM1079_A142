@@ -46,7 +46,6 @@ mean_salary_by_marital_status <- employee_data %>%
   group_by(MaritalDesc) %>%
   summarise(mean_salary = mean(Salary))
 
-#adsgg
 
 # Visualize the frequency of Salaries based on the cleaned dataset
 hist(employee_data[[INDEPENDENT_VARIABLE]],
@@ -58,6 +57,19 @@ hist(employee_data[[INDEPENDENT_VARIABLE]],
      freq = TRUE,
      scientific = FALSE
 )
+
+#Changing Histogram to GGPLOT2
+salary_histogram <- ggplot(employee_data, aes(x = Salary)) +
+  geom_histogram(binwidth = 5000, fill = "lightblue", color = "black", alpha = 0.7) +  # Adjust binwidth as needed
+  labs(title = "Histogram of Annual Salary Distribution ($)",
+       x = "Salaries ($)",
+       y = "Frequency") +
+  theme_minimal() +  # Use a minimal theme for better aesthetics
+  scale_x_continuous(labels = scales::comma) +  # Format x-axis labels with commas
+  scale_y_continuous(limits = c(0, 70)) +  # Set y-axis limits
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Optional: Rotate x-axis labels for better visibility
+
+
 # Format the x-axis
 axis(1, at = pretty(employee_data[[INDEPENDENT_VARIABLE]]),
      labels = format(pretty(employee_data[[INDEPENDENT_VARIABLE]]), scientific = FALSE))
