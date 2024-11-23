@@ -69,6 +69,15 @@ salary_histogram <- ggplot(employee_data, aes(x = Salary)) +
   scale_y_continuous(limits = c(0, 70)) +  # Set y-axis limits
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Optional: Rotate x-axis labels for better visibility
 
+# Add a bell curve
+salary_histogram <- salary_histogram +
+  stat_function(fun = dnorm, args = list(mean = mean(employee_data[[INDEPENDENT_VARIABLE]]), 
+                                         sd = sd(employee_data[[INDEPENDENT_VARIABLE]])),
+                aes(colour = "Bell Curve"), size = 1) +
+  scale_color_manual(name = "Statistics", values = "blue")
+
+# Save the histogram to a PNG file using ggsave
+ggsave("salary_histogram.png", plot = salary_histogram, width = 8, height = 5, dpi = 300)
 
 # Format the x-axis
 axis(1, at = pretty(employee_data[[INDEPENDENT_VARIABLE]]),
