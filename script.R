@@ -68,6 +68,9 @@ salary_histogram <- ggplot(final_employee_data, aes(x = Salary)) +
 # Display the histogram
 salary_histogram
 
+# Save the histogram to a PNG file using ggsave
+ggsave("salary_histogram.png", plot = salary_histogram, width = 8, height = 5, dpi = 300)
+
 # Test for normality
 shapiro.test(final_employee_data[[INDEPENDENT_VARIABLE]])
 
