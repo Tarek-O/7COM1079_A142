@@ -21,9 +21,7 @@ employee_data_projection <- raw_data[FINAL_COLUMNS]
 # Parse all the string data in the dataset so that there are no leading or trailing whitespaces and convert to lowercase
 for (i in seq_len(ncol(employee_data_projection))) {
   if (!is.character(employee_data_projection[[i]])) next
-
-  employee_data_projection[[i]] <- trimws(employee_data_projection[[i]], which = "both")
-  employee_data_projection[[i]] <- tolower(employee_data_projection[[i]])
+  employee_data_projection[[i]] <- tolower(trimws(employee_data_projection[[i]], which = "both"))
 }
 
 
