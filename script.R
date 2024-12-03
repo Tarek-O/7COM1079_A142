@@ -25,10 +25,27 @@ for (i in seq_len(ncol(employee_data_projection))) {
 }
 
 
-subset_bool <- employee_data_projection$Department == "production" & employee_data_projection$MaritalDesc %in% c("married", "single")
+subset_bool <- employee_data_projection$Department == "production" &
+  employee_data_projection$MaritalDesc %in% c("married", "single")
 
 #Created a subset of the original dataset to clean the data
 final_employee_data<-subset(employee_data_projection, subset_bool)
+shapiro.test(final_employee_data[[INDEPENDENT_VARIABLE]])
+
+# View all the extreme outliers which are higher than the mean of each group from the raw data
+outliers <- subset(raw_data, subset_bool) %>%
+  group_by(MaritalDesc) %>%
+  filter(Salary > mean(Salary)) %>%
+  select(EMPLOYEE_COLUMNS, FEATURE_COLUMNS)
+
+View(outliers)
+
+# Remove the top 1% of the data from both categories
+final_employee_data <- final_employee_data %>%
+  group_by(MaritalDesc) %>%
+  filter(Salary < quantile(Salary, 0.99))
+shapiro.test(final_employee_data[[INDEPENDENT_VARIABLE]])
+
 
 #Check for missing values
 summary(final_employee_data)
@@ -73,7 +90,7 @@ ggsave("salary_histogram.png", plot = salary_histogram, width = 8, height = 5, d
 shapiro.test(final_employee_data[[INDEPENDENT_VARIABLE]])
 
 # Test for equality of variance
-wilcox.test(final_employee_data[[INDEPENDENT_VARIABLE]] ~ final_employee_data[[DEPENDENT_VARIABLE]])
+t.test(final_employee_data[[INDEPENDENT_VARIABLE]] ~ final_employee_data[[DEPENDENT_VARIABLE]])
 
 # Get the mean salary of the employees
 mean_salary <- mean(final_employee_data[[INDEPENDENT_VARIABLE]])
