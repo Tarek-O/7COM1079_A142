@@ -114,7 +114,3 @@ boxplot
 
 # Save the boxplot to a png file
 ggsave("salary_boxplot.png", plot = boxplot)
-
-## To-Do Remove the outlier then repeat the Shapiro and Wilcox tests then Visualization to check
-## That the data is infact Normal and not Non-parametric
-## Will use T Test after proving that
